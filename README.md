@@ -17,12 +17,15 @@ npm start                             # http://localhost:3000
 
 테스트: `npm test`
 
+PDF 리포트와 결제 후 이메일 미리보기: `node scripts/preview.js <결과.json> <이름>` (Playwright 필요, `preview/`에 report.pdf · email.html 생성)
+
 ## 구조
 
 | 파일 | 하는 일 |
 | --- | --- |
 | `saju.js` | 만세력 계산(`lunar-javascript`): 사주팔자, 오행 분포, 십성, 대상 연도의 연운·월운 |
 | `reading.js` | 노스님 시스템 프롬프트와 출력 스키마, Claude API 호출 |
+| `render.js` | PDF용 리포트 HTML(A4, 표지 + 7개 섹션)과 결제 후 발송 이메일 HTML |
 | `server.js` | `POST /api/reading` 입력 검증 → 계산 → 풀이 |
 | `public/` | 입력 화면, 무료 맛보기, 상세 리포트 화면 |
 
