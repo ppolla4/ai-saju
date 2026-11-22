@@ -17,16 +17,8 @@ const server = app.listen(0);
 const base = `http://localhost:${server.address().port}`;
 test.after(() => server.close());
 
-test("결제 전에는 리포트가 열리지 않고, 결제 후에는 열린다", async () => {
+test("저장된 리포트는 링크로 바로 열린다", async () => {
   const saved = await saveReport({ name: "지수", chart: publicChart, flow: yearFlow(_dayStem, 2027), reading: sample });
-
-  assert.equal((await fetch(`${base}/report/${saved.id}`)).status, 402);
-
-  const unlock = await fetch(`${base}/api/reports/${saved.id}/unlock`, { method: "POST" });
-  assert.equal(unlock.status, 200);
-  const body = await unlock.json();
-  assert.equal(body.url, `/report/${saved.id}`);
-  assert.equal(body.report.closing, sample.report.closing);
 
   const page = await fetch(`${base}/report/${saved.id}`);
   assert.equal(page.status, 200);
@@ -38,5 +30,14 @@ test("결제 전에는 리포트가 열리지 않고, 결제 후에는 열린다
 test("없는 리포트나 이상한 id는 404", async () => {
   assert.equal((await fetch(`${base}/report/00000000-0000-0000-0000-000000000000`)).status, 404);
   assert.equal((await fetch(`${base}/report/..%2F..%2Fpackage`)).status, 404);
-  assert.equal((await fetch(`${base}/api/reports/nope/unlock`, { method: "POST" })).status, 404);
+});
+
+test("하루 횟수 제한: 3번까지 허용하고 다음 날 초기화", async () => {
+  const { createDailyLimit } = await import("../limit.js");
+  let now = new Date("2026-11-22T10:00:00Z");
+  const limit = createDailyLimit(3, () => now);
+  assert.deepEqual([1, 2, 3, 4].map(() => limit.take("1.2.3.4")), [true, true, true, false]);
+  assert.equal(limit.take("5.6.7.8"), true);
+  now = new Date("2026-11-23T10:00:00Z");
+  assert.equal(limit.take("1.2.3.4"), true);
 });

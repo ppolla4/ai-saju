@@ -11,7 +11,7 @@ const file = (id) => path.join(DIR, `${id}.json`);
 export async function saveReport(record) {
   await fs.mkdir(DIR, { recursive: true });
   const id = randomUUID();
-  const full = { id, createdAt: new Date().toISOString(), paid: false, ...record };
+  const full = { id, createdAt: new Date().toISOString(), ...record };
   await fs.writeFile(file(id), JSON.stringify(full));
   return full;
 }
@@ -23,12 +23,4 @@ export async function loadReport(id) {
   } catch {
     return null;
   }
-}
-
-export async function markPaid(id, payment) {
-  const record = await loadReport(id);
-  if (!record) return null;
-  const updated = { ...record, paid: true, paidAt: new Date().toISOString(), payment };
-  await fs.writeFile(file(id), JSON.stringify(updated));
-  return updated;
 }

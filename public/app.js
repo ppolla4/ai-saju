@@ -52,10 +52,9 @@ function el(tag, text, className) {
   return node;
 }
 
-let currentId = null;
-
-function render({ id, chart, reading }) {
-  currentId = id;
+function render({ url, pdfUrl, chart, reading }) {
+  $("report-link").href = url;
+  $("pdf-link").href = pdfUrl;
   $("opening").textContent = reading.opening;
   $("summary").textContent = reading.summary;
 
@@ -92,7 +91,7 @@ function render({ id, chart, reading }) {
   $("pv-caution").textContent = reading.preview.caution;
   $("pv-start").textContent = reading.preview.startNow;
 
-  $("report").replaceChildren();
+  renderReport(reading.report);
   $("report").hidden = true;
   $("links").hidden = true;
   $("unlock").hidden = false;
@@ -153,24 +152,11 @@ function renderReport(r) {
   report.append(el("p", r.closing, "monk"));
 }
 
-$("unlock").addEventListener("click", async () => {
-  $("unlock").disabled = true;
-  try {
-    const res = await fetch(`/api/reports/${currentId}/unlock`, { method: "POST" });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || "리포트를 열지 못했어요.");
-    renderReport(json.report);
-    $("report-link").href = json.url;
-    $("pdf-link").href = json.pdfUrl;
-    $("report").hidden = false;
-    $("links").hidden = false;
-    $("unlock").hidden = true;
-    $("report").scrollIntoView({ behavior: "smooth" });
-  } catch (err) {
-    alert(err.message);
-  } finally {
-    $("unlock").disabled = false;
-  }
+$("unlock").addEventListener("click", () => {
+  $("report").hidden = false;
+  $("links").hidden = false;
+  $("unlock").hidden = true;
+  $("report").scrollIntoView({ behavior: "smooth" });
 });
 
 $("again").addEventListener("click", () => {

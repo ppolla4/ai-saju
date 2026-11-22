@@ -122,3 +122,4 @@ html { scroll-behavior: smooth; }
 .links a { display: block; padding: 12px; border-radius: 10px; text-decoration: none; font-weight: 700; }
 .pay-link { background: var(--ink); color: var(--paper); }
 .ghost-link { border: 1px solid var(--line); color: var(--ink); }
+.ad-slot { min-height: 100px; margin: 16px 0; display: grid; place-items: center; border: 1px dashed var(--line); border-radius: 10px; color: var(--muted); font-size: 12px; }

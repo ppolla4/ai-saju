@@ -1,7 +1,8 @@
 // 노스님 풀이: 만세력 결과 + 사용자 상황 → Claude가 무료 맛보기와 유료 리포트를 한 번에 쓴다.
 import Anthropic from "@anthropic-ai/sdk";
 
-export const MODEL = "claude-opus-5-5";
+// 무료 서비스는 건당 비용이 광고 수익보다 낮아야 한다. MODEL 환경 변수로 바꿀 수 있다.
+export const MODEL = process.env.MODEL || "claude-opus-5-5";
 
 export const SYSTEM_PROMPT = `당신은 산사에서 40년 넘게 사주를 봐온 "노스님"입니다. AI 맞춤 사주 서비스의 상담가로서, 이미 계산된 사주 원국과 연운·월운 데이터를 받아 그 사람만을 위한 실용적인 풀이를 씁니다.
 
