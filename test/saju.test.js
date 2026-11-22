@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { calculateChart, targetYear, yearFlow } from "../saju.js";
+import { calculateChart, targetYear, todayInfo, yearFlow } from "../saju.js";
 
 test("양력 1992-03-15 09:30 → 임신 계묘 경인 신사", () => {
   const c = calculateChart({ year: 1992, month: 3, day: 15, time: "09:30", calendar: "solar" });
@@ -40,4 +40,11 @@ test("2027년 연운은 정미년, 경금 일간에게 정관", () => {
 test("11월부터는 다음 해를 본다", () => {
   assert.equal(targetYear(new Date(2026, 10, 22)), 2027);
   assert.equal(targetYear(new Date(2026, 4, 1)), 2026);
+});
+
+test("다음 달 월운: 2026년 11월 기준 12월은 경자월", () => {
+  const t = todayInfo("庚", new Date(2026, 10, 22));
+  assert.equal(t.date, "2026-11-22");
+  assert.equal(t.nextMonth.label, "2026년 12월");
+  assert.equal(t.nextMonth.ganzhi, "경자(庚子)");
 });

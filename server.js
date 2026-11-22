@@ -1,6 +1,6 @@
 import express from "express";
 import Anthropic from "@anthropic-ai/sdk";
-import { calculateChart, targetYear, yearFlow } from "./saju.js";
+import { calculateChart, targetYear, todayInfo, yearFlow } from "./saju.js";
 import { generateReading, ReadingError } from "./reading.js";
 
 const app = express();
@@ -56,7 +56,8 @@ app.post("/api/reading", async (req, res) => {
   }
   const flow = yearFlow(chart._dayStem, targetYear());
   try {
-    const reading = await generateReading({ profile: input.profile, chart, flow }, client);
+    const today = todayInfo(chart._dayStem);
+    const reading = await generateReading({ profile: input.profile, chart, flow, today }, client);
     const { _dayStem, ...publicChart } = chart;
     res.json({ chart: publicChart, flow, reading });
   } catch (err) {

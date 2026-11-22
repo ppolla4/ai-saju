@@ -26,6 +26,11 @@ export const SYSTEM_PROMPT = `당신은 산사에서 40년 넘게 사주를 봐�
 - 특정 주식·코인·종목 추천, 의료·법률 판단.
 - 부적·굿·추가 상품 구매 권유, 불교 교리 설교.
 
+[필드 규칙]
+- summary: 이 사람을 한 줄로 요약한 30자 이내의 문구. 예: "아이디어를 돈으로 바꾸는 사람"
+- opening: 노스님의 여는 말 2~3문장.
+- nextMonth: [오늘]에 적힌 다음 달의 월운으로 씁니다.
+
 [무료 맛보기]
 - preview의 세 줄은 각각 한 문장으로 핵심을 하나 알려주고, 뒤에 "…" 로 끝나는 미완성 문장을 붙여 궁금하게 만듭니다.
   예: "2027년은 연봉이 오르는 방식으로 돈이 늘기 좋은 해입니다. 가장 좋은 달은…"
@@ -59,10 +64,13 @@ export const READING_SCHEMA = obj({
 });
 
 /** 사용자 메시지: 계산 결과와 입력 상황을 그대로 넘긴다. */
-export function buildUserMessage({ profile, chart, flow }) {
+export function buildUserMessage({ profile, chart, flow, today }) {
   const { _dayStem, ...chartForModel } = chart;
   return [
     "아래 사람의 맞춤 사주 풀이를 써 주십시오.",
+    "",
+    "[오늘]",
+    JSON.stringify(today, null, 2),
     "",
     "[사용자]",
     JSON.stringify(profile, null, 2),
@@ -81,7 +89,7 @@ export class ReadingError extends Error {}
  * Claude에게 풀이를 요청한다. 거절 시 서버 측 fallback이 다른 모델로 이어 쓴다.
  * @returns {Promise<object>} READING_SCHEMA 모양의 객체
  */
-export async function generateReading({ profile, chart, flow }, client = new Anthropic()) {
+export async function generateReading({ profile, chart, flow, today }, client = new Anthropic()) {
   const stream = client.beta.messages.stream({
     model: MODEL,
     max_tokens: 32000,
@@ -92,7 +100,7 @@ export async function generateReading({ profile, chart, flow }, client = new Ant
       format: { type: "json_schema", schema: READING_SCHEMA },
     },
     system: SYSTEM_PROMPT,
-    messages: [{ role: "user", content: buildUserMessage({ profile, chart, flow }) }],
+    messages: [{ role: "user", content: buildUserMessage({ profile, chart, flow, today }) }],
   });
   const message = await stream.finalMessage();
 

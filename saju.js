@@ -113,3 +113,18 @@ export function yearFlow(dayStem, year) {
     months,
   };
 }
+
+/** 오늘 날짜와 다음 달의 월운(다음 달 미리보기용). */
+export function todayInfo(dayStem, now = new Date()) {
+  const next = new Date(now.getFullYear(), now.getMonth() + 1, 15);
+  const gz = Solar.fromYmd(next.getFullYear(), next.getMonth() + 1, 15).getLunar().getMonthInGanZhiExact();
+  return {
+    date: `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`,
+    nextMonth: {
+      label: `${next.getFullYear()}년 ${next.getMonth() + 1}월`,
+      ganzhi: ganzhiKo(gz),
+      stemTenGod: tenGod(dayStem, gz[0]),
+      branchTenGod: tenGod(dayStem, branchMainStem(gz[1])),
+    },
+  };
+}
