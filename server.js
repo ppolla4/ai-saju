@@ -2,6 +2,8 @@ import express from "express";
 import Anthropic from "@anthropic-ai/sdk";
 import { calculateChart, targetYear, todayInfo, yearFlow } from "./saju.js";
 import { generateReading, ReadingError } from "./reading.js";
+import { loadReport, markPaid, saveReport } from "./store.js";
+import { reportHtml } from "./render.js";
 
 const app = express();
 app.use(express.json({ limit: "20kb" }));
@@ -59,7 +61,10 @@ app.post("/api/reading", async (req, res) => {
     const today = todayInfo(chart._dayStem);
     const reading = await generateReading({ profile: input.profile, chart, flow, today }, client);
     const { _dayStem, ...publicChart } = chart;
-    res.json({ chart: publicChart, flow, reading });
+    const saved = await saveReport({ name: input.profile.name, profile: input.profile, chart: publicChart, flow, reading });
+    // 결제 전에는 무료 맛보기만 보낸다. 전체 리포트는 서버에만 있다.
+    const { report, ...free } = reading;
+    res.json({ id: saved.id, chart: publicChart, flow, reading: free });
   } catch (err) {
     if (err instanceof ReadingError) return res.status(502).json({ error: err.message });
     if (err instanceof Anthropic.AuthenticationError) {
@@ -70,6 +75,47 @@ app.post("/api/reading", async (req, res) => {
     }
     console.error(err);
     res.status(500).json({ error: "풀이 중 오류가 났어요. 다시 시도해 주세요." });
+  }
+});
+
+// 결제 완료 처리. 시제품에서는 결제 없이 바로 완료로 표시한다.
+// 결제 연동 시: 결제사 승인 API로 금액(9,900원)과 주문번호를 서버에서 확인한 뒤에만 markPaid를 부른다.
+app.post("/api/reports/:id/unlock", async (req, res) => {
+  const record = await markPaid(req.params.id, { method: "prototype", amount: 0 });
+  if (!record) return res.status(404).json({ error: "리포트를 찾을 수 없어요." });
+  res.json({ report: record.reading.report, url: `/report/${record.id}`, pdfUrl: `/report/${record.id}.pdf` });
+});
+
+async function paidReport(id, res) {
+  const record = await loadReport(id);
+  if (!record) {
+    res.status(404).send("리포트를 찾을 수 없어요.");
+    return null;
+  }
+  if (!record.paid) {
+    res.status(402).send("결제 후 볼 수 있는 리포트예요.");
+    return null;
+  }
+  return record;
+}
+
+const issued = (record) => record.paidAt.slice(0, 10);
+
+app.get("/report/:file", async (req, res) => {
+  const isPdf = req.params.file.endsWith(".pdf");
+  const record = await paidReport(req.params.file.replace(/\.pdf$/, ""), res);
+  if (!record) return;
+  const html = reportHtml({ ...record, issuedAt: issued(record) });
+  if (!isPdf) return res.type("html").send(html);
+  try {
+    const { renderPdf } = await import("./pdf.js");
+    const pdf = await renderPdf(html);
+    res.type("application/pdf");
+    res.set("Content-Disposition", `attachment; filename="saju-report-${record.flow.year}.pdf"; filename*=UTF-8''${encodeURIComponent(`${record.name}_${record.flow.year}_사주리포트.pdf`)}`);
+    res.send(pdf);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("PDF를 만들지 못했어요.");
   }
 });
 

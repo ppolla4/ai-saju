@@ -52,7 +52,10 @@ function el(tag, text, className) {
   return node;
 }
 
-function render({ chart, reading }) {
+let currentId = null;
+
+function render({ id, chart, reading }) {
+  currentId = id;
   $("opening").textContent = reading.opening;
   $("summary").textContent = reading.summary;
 
@@ -89,8 +92,9 @@ function render({ chart, reading }) {
   $("pv-caution").textContent = reading.preview.caution;
   $("pv-start").textContent = reading.preview.startNow;
 
-  renderReport(reading.report);
+  $("report").replaceChildren();
   $("report").hidden = true;
+  $("links").hidden = true;
   $("unlock").hidden = false;
   $("result").hidden = false;
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -149,10 +153,24 @@ function renderReport(r) {
   report.append(el("p", r.closing, "monk"));
 }
 
-$("unlock").addEventListener("click", () => {
-  $("report").hidden = false;
-  $("unlock").hidden = true;
-  $("report").scrollIntoView({ behavior: "smooth" });
+$("unlock").addEventListener("click", async () => {
+  $("unlock").disabled = true;
+  try {
+    const res = await fetch(`/api/reports/${currentId}/unlock`, { method: "POST" });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || "리포트를 열지 못했어요.");
+    renderReport(json.report);
+    $("report-link").href = json.url;
+    $("pdf-link").href = json.pdfUrl;
+    $("report").hidden = false;
+    $("links").hidden = false;
+    $("unlock").hidden = true;
+    $("report").scrollIntoView({ behavior: "smooth" });
+  } catch (err) {
+    alert(err.message);
+  } finally {
+    $("unlock").disabled = false;
+  }
 });
 
 $("again").addEventListener("click", () => {

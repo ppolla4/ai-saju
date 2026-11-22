@@ -118,3 +118,7 @@ html { scroll-behavior: smooth; }
 .placeholder { text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 12px; padding: 24px; margin: 0; }
 #form { scroll-margin-top: 16px; }
 #form h2 { margin-bottom: 20px; }
+.links { display: grid; gap: 8px; text-align: center; }
+.links a { display: block; padding: 12px; border-radius: 10px; text-decoration: none; font-weight: 700; }
+.pay-link { background: var(--ink); color: var(--paper); }
+.ghost-link { border: 1px solid var(--line); color: var(--ink); }
