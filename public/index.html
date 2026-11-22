@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>노스님의 맞춤 사주</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <header class="hero">
+      <p class="eyebrow">AI 맞춤 사주</p>
+      <h1>노스님의 맞춤 사주</h1>
+      <p class="lead">"어서 오십시오. 사주를 펼쳐 보면 돈이 들어오는 달과 새는 곳이 보입니다."</p>
+    </header>
+
+    <form id="form" class="card" novalidate>
+      <div class="row">
+        <label>이름(닉네임)<input name="name" maxlength="20" required placeholder="지수" /></label>
+        <fieldset class="seg">
+          <legend>성별</legend>
+          <label><input type="radio" name="gender" value="female" required />여성</label>
+          <label><input type="radio" name="gender" value="male" />남성</label>
+        </fieldset>
+      </div>
+      <div class="row">
+        <label>생년월일<input type="date" name="birthDate" required min="1920-01-01" max="2025-12-31" /></label>
+        <fieldset class="seg">
+          <legend>달력</legend>
+          <label><input type="radio" name="calendar" value="solar" checked />양력</label>
+          <label><input type="radio" name="calendar" value="lunar" />음력</label>
+        </fieldset>
+      </div>
+      <div class="row">
+        <label>태어난 시간<input type="time" name="birthTime" /></label>
+        <label class="check"><input type="checkbox" name="timeUnknown" />시간을 몰라요</label>
+      </div>
+      <label>지금 하는 일
+        <select name="job">
+          <option value="직장인">직장인</option>
+          <option value="자영업">자영업</option>
+          <option value="프리랜서">프리랜서</option>
+          <option value="학생">학생</option>
+          <option value="구직 중">구직 중</option>
+          <option value="주부">주부</option>
+        </select>
+      </label>
+      <fieldset class="chips">
+        <legend>관심사 (여러 개 선택)</legend>
+        <label><input type="checkbox" name="interests" value="돈" checked />돈</label>
+        <label><input type="checkbox" name="interests" value="이직" />이직</label>
+        <label><input type="checkbox" name="interests" value="창업" />창업</label>
+        <label><input type="checkbox" name="interests" value="연애" />연애</label>
+        <label><input type="checkbox" name="interests" value="건강" />건강</label>
+      </fieldset>
+      <label>지금 고민 한 줄
+        <input name="concern" maxlength="100" placeholder="내년에 이직해도 될까요?" />
+      </label>
+      <button type="submit" id="submit">노스님께 사주 보이기</button>
+      <p id="error" class="error" role="alert" hidden></p>
+    </form>
+
+    <section id="loading" class="card center" hidden>
+      <div class="spinner" aria-hidden="true"></div>
+      <p>노스님이 사주를 펼쳐 보고 계십니다… (30초~1분)</p>
+    </section>
+
+    <section id="result" hidden>
+      <div class="card">
+        <p class="monk" id="opening"></p>
+        <h2>사주 원국</h2>
+        <table class="pillars" id="pillars"></table>
+        <p class="summary" id="summary"></p>
+        <div class="elements" id="elements"></div>
+      </div>
+
+      <div class="card">
+        <h2>무료 맛보기</h2>
+        <ul class="preview">
+          <li><span class="tag">재물운</span><span id="pv-wealth"></span></li>
+          <li><span class="tag">조심할 일</span><span id="pv-caution"></span></li>
+          <li><span class="tag">시작할 일</span><span id="pv-start"></span></li>
+        </ul>
+        <button id="unlock" class="pay">노스님께 전체 풀이 듣기 9,900원</button>
+        <p class="note">시제품이라 결제 없이 바로 열립니다.</p>
+      </div>
+
+      <article id="report" class="card report" hidden></article>
+      <button id="again" class="ghost">다른 사주 보기</button>
+    </section>
+
+    <footer>사주 풀이는 참고용이며, 중요한 결정은 스스로 판단하세요.</footer>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

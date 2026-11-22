@@ -1,0 +1,86 @@
+:root {
+  --paper: #f4efe4;
+  --card: #fbf8f1;
+  --ink: #23201b;
+  --muted: #6d665a;
+  --line: #ddd4c2;
+  --accent: #8a2f1d;
+  --gold: #a7792b;
+  --wood: #4f7a43; --fire: #b8432b; --earth: #a7792b; --metal: #7d7f86; --water: #2f5f8a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #16140f; --card: #1f1c16; --ink: #ece5d6; --muted: #a59d8d; --line: #3a352b;
+    --accent: #e0775c; --gold: #d6a858;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #16140f; --card: #1f1c16; --ink: #ece5d6; --muted: #a59d8d; --line: #3a352b;
+  --accent: #e0775c; --gold: #d6a858;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 16px/1.7 "Noto Sans KR", system-ui, sans-serif;
+}
+main { max-width: 640px; margin: 0 auto; padding: 32px 16px 48px; }
+h1, h2, .monk, .summary { font-family: "Nanum Myeongjo", serif; }
+.hero { text-align: center; margin-bottom: 24px; }
+.eyebrow { color: var(--gold); letter-spacing: .2em; font-size: 13px; margin: 0; }
+h1 { font-size: 34px; margin: 4px 0 8px; font-weight: 800; }
+.lead { color: var(--muted); margin: 0; }
+h2 { font-size: 20px; margin: 0 0 12px; }
+
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+.center { text-align: center; }
+label { display: block; font-weight: 500; margin-bottom: 14px; }
+input, select {
+  display: block; width: 100%; margin-top: 6px; padding: 10px 12px; font: inherit; color: var(--ink);
+  background: var(--paper); border: 1px solid var(--line); border-radius: 8px;
+}
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: end; }
+@media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
+fieldset { border: 0; padding: 0; margin: 0 0 14px; }
+legend { font-weight: 500; margin-bottom: 6px; }
+.seg label, .chips label, .check {
+  display: inline-flex; align-items: center; gap: 6px; margin: 0 6px 6px 0; padding: 8px 12px;
+  border: 1px solid var(--line); border-radius: 999px; font-weight: 400; cursor: pointer;
+}
+.seg input, .chips input, .check input { width: auto; margin: 0; }
+.check { margin-bottom: 14px; }
+
+button {
+  width: 100%; padding: 14px; font: 700 17px "Noto Sans KR", sans-serif; cursor: pointer;
+  color: #fff; background: var(--ink); border: 0; border-radius: 10px;
+}
+button:disabled { opacity: .5; cursor: wait; }
+.pay { background: var(--accent); margin-top: 8px; }
+.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.error { color: var(--accent); margin: 12px 0 0; }
+.note { color: var(--muted); font-size: 13px; text-align: center; margin: 8px 0 0; }
+
+.monk { font-size: 18px; border-left: 3px solid var(--gold); padding-left: 12px; margin: 0 0 20px; }
+.summary { font-size: 20px; font-weight: 700; text-align: center; margin: 16px 0 8px; }
+.pillars { width: 100%; border-collapse: collapse; text-align: center; table-layout: fixed; }
+.pillars th { color: var(--muted); font-weight: 500; font-size: 13px; padding: 4px; }
+.pillars td { padding: 8px 4px; border: 1px solid var(--line); }
+.pillars .char { font: 700 20px "Nanum Myeongjo", serif; display: block; }
+.pillars .god { font-size: 12px; color: var(--muted); }
+.pillars td.me { background: color-mix(in srgb, var(--gold) 15%, transparent); }
+.elements { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+.elements span { font-size: 13px; padding: 2px 10px; border-radius: 999px; color: #fff; }
+
+.preview { list-style: none; padding: 0; margin: 0 0 8px; }
+.preview li { padding: 12px 0; border-bottom: 1px dashed var(--line); }
+.tag { display: inline-block; font-size: 12px; font-weight: 700; color: var(--accent); margin-right: 8px; }
+
+.report h3 { font: 700 18px "Nanum Myeongjo", serif; margin: 24px 0 8px; padding-top: 16px; border-top: 1px solid var(--line); }
+.report h3:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+.report dt { font-weight: 700; margin-top: 10px; }
+.report dd { margin: 2px 0 0; }
+.report ol { padding-left: 20px; margin: 4px 0; }
+footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 24px; }
+
+.spinner { width: 36px; height: 36px; margin: 8px auto 12px; border: 3px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
