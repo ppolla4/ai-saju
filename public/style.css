@@ -84,3 +84,37 @@ footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 2
 
 .spinner { width: 36px; height: 36px; margin: 8px auto 12px; border: 3px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- 랜딩 ---------- */
+html { scroll-behavior: smooth; }
+.land { position: relative; padding: 40px 0 24px; }
+.enso { width: 120px; height: 120px; color: var(--ink); opacity: .85; display: block; margin: 0 auto 12px; }
+.hook { font-size: 30px; line-height: 1.45; margin: 12px 0 16px; }
+.hook em { font-style: normal; color: var(--accent); }
+.wide { display: none; }
+@media (min-width: 560px) { .wide { display: inline; } .hook { font-size: 36px; } }
+.cta {
+  display: inline-block; margin-top: 24px; padding: 16px 32px; border-radius: 10px; text-decoration: none;
+  background: var(--accent); color: #fff; font-weight: 700; font-size: 17px;
+}
+.land-sec { padding: 40px 0; border-top: 1px solid var(--line); }
+.center { text-align: center; }
+.teaser { list-style: none; padding: 0; margin: 0; }
+.teaser li { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+.blur { filter: blur(5px); user-select: none; }
+.scenes { display: grid; gap: 10px; }
+@media (min-width: 560px) { .scenes { grid-template-columns: repeat(3, 1fr); } }
+.scenes p { margin: 0; padding: 18px 12px; text-align: center; background: var(--ink); color: var(--paper); border-radius: 12px; font-size: 15px; }
+.scenes b { color: var(--gold); }
+.answer { text-align: center; font: 700 20px/1.6 "Nanum Myeongjo", serif; margin: 28px 0 0; }
+.points { list-style: none; padding: 0; margin: 0; }
+.points li { padding: 10px 0; border-bottom: 1px dashed var(--line); color: var(--muted); }
+.points b { display: block; color: var(--ink); }
+.toc { padding-left: 22px; margin: 0; }
+.toc li { padding: 6px 0; font-weight: 500; }
+.toc small { display: block; color: var(--muted); font-weight: 400; }
+.price { text-align: center; margin: 20px 0 0; font-size: 17px; }
+.price b { color: var(--accent); font-size: 22px; }
+.placeholder { text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 12px; padding: 24px; margin: 0; }
+#form { scroll-margin-top: 16px; }
+#form h2 { margin-bottom: 20px; }

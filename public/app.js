@@ -23,6 +23,7 @@ form.addEventListener("submit", async (event) => {
 
   $("submit").disabled = true;
   form.hidden = true;
+  $("landing").hidden = true;
   $("loading").hidden = false;
   try {
     const res = await fetch("/api/reading", {
@@ -35,6 +36,7 @@ form.addEventListener("submit", async (event) => {
     render(json);
   } catch (err) {
     form.hidden = false;
+    $("landing").hidden = false;
     $("error").textContent = err.message;
     $("error").hidden = false;
   } finally {
@@ -156,5 +158,12 @@ $("unlock").addEventListener("click", () => {
 $("again").addEventListener("click", () => {
   $("result").hidden = true;
   form.hidden = false;
+  $("landing").hidden = false;
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
+
+// 풀이 대상 연도(11월부터는 다음 해)를 첫 문구에 반영한다.
+{
+  const now = new Date();
+  $("hook-year").textContent = now.getMonth() >= 10 ? now.getFullYear() + 1 : now.getFullYear();
+}
